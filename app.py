@@ -55,7 +55,7 @@ st.markdown("<h2>📍 Rekomendasi Cafe Terdekat di Surabaya</h2>", unsafe_allow_
 
 # Form input lokasi
 with st.form(key='lokasi_form'):
-    alamat_input = st.text_input("Masukkan alamat atau lokasi anda saat ini:", placeholder="Contoh: Tunjungan Plaza")
+    alamat_input = st.text_input("Masukkan alamat atau lokasi anda saat ini:", placeholder="Contoh: Tunjungan Plaza, Surabaya")
     submit = st.form_submit_button("🔍 Lihat Rekomendasi")
 
 # Proses rekomendasi
@@ -87,9 +87,9 @@ if submit and alamat_input:
         df['rating_norm'] = scaler.fit_transform(df[['rating']])
         df['jarak_norm'] = scaler.fit_transform(df[['jarak_km']])
 
-        df['skor_rekomendasi'] = 0.7 * df['rating_norm'] + 0.3 * (1 - df['jarak_norm'])
+        df['skor_rekomendasi'] = 0.3 * df['rating_norm'] + 0.7 * (1 - df['jarak_norm'])
 
-        df_sorted = df.sort_values(by='skor_rekomendasi', ascending=False).head(5)
+        df_sorted = df.sort_values(by='skor_rekomendasi', ascending=False).head(20)
 
         st.markdown("### ☕ Hasil Rekomendasi")
 
