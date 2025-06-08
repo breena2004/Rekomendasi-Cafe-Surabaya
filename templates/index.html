@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Rekomendasi Cafe Surabaya</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 700px;
+            margin: 30px auto;
+        }
+
+        li {
+            background-color: #ecf0f1;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        li strong {
+            font-size: 18px;
+        }
+
+        a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .rating {
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .distance {
+            font-weight: bold;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>📍 Rekomendasi Cafe Terdekat di Surabaya</h1>
+
+    <form method="post" id="lokasiForm">
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+        <p id="status">Mendeteksi lokasi Anda...</p>
+        <button type="submit" id="submitBtn" disabled>🔍 Lihat Rekomendasi</button>
+    </form>
+
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                    document.getElementById('submitBtn').disabled = false;
+                    document.getElementById('status').textContent = "✅ Lokasi berhasil terdeteksi.";
+                },
+                function(error) {
+                    document.getElementById('status').textContent = "❌ Gagal mendeteksi lokasi.";
+                }
+            );
+        } else {
+            document.getElementById('status').textContent = "⚠️ Geolocation tidak didukung oleh browser ini.";
+        }
+    </script>
+
+    {% if rekomendasi %}
+        <h2 style="text-align: center;">☕ Hasil Rekomendasi</h2>
+        <ul>
+            {% for cafe in rekomendasi %}
+                <li>
+                    <strong>{{ cafe[0] }}</strong><br>
+                    {{ cafe[1] }}<br>
+                    Rating: <span class="rating">{{ cafe[2] }}</span> |
+                    Jarak: <span class="distance">{{ '%.2f'|format(cafe[3]) }} km</span><br>
+                    📍 <a href="{{ cafe[4] }}" target="_blank">Lihat di Google Maps</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
